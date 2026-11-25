@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0d1322"><meta name="mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Œil Intérieur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: calme, intime, précis : un carnet d'expérience sur soi
+   IDEA: une chambre noire où l'image se révèle peu à peu
+   PICTURE: un grand disque « pupille » qui respire et sert d'écran de séance
+   COLOUR and TYPE: nuit bleu d'encre, lune pâle, accent corail ; Fraunces + Inter
+   LAYOUT: une colonne ; la proposition du réseau d'abord, puis la séance, les progrès, les données */
+:root{color-scheme:light dark;--bg:light-dark(#f3efe6,#0d1322);--ink:light-dark(#18202e,#ece6da);--card:light-dark(#fffdf8,#151d31);--mute:light-dark(#5f6470,#9ba1b2);--line:light-dark(#e1dbcd,#263049);--acc:light-dark(#d4532f,#ff8a63);--acc2:light-dark(#2c4a7a,#8fb0e8);--soft:light-dark(#f8e3da,#2a2030)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:600;line-height:1.1;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,7vw,46px)}h2{font-size:24px;margin-bottom:10px}h3{font-size:18px}
+.wrap{max-width:720px;margin:0 auto;padding:22px max(4vw,16px) 60px}
+header p{color:var(--mute);margin:6px 0 16px}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+nav button{flex:1 1 120px}
+button{font:600 15px Inter,sans-serif;min-height:44px;padding:10px 16px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--acc2);outline-offset:2px}
+button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button.main{background:var(--acc);color:#fff;border-color:var(--acc);font-size:17px}
+button:disabled{opacity:.45;cursor:default}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px}
+.pupil{width:min(62vw,260px);aspect-ratio:1;border-radius:50%;margin:6px auto 18px;background:radial-gradient(circle at 50% 50%,#05070d 0 34%,#1c2c52 35%,#3b5b96 52%,#1a2747 70%,#0b1020 71%);box-shadow:0 0 0 8px var(--soft),0 18px 40px rgba(0,0,0,.25);position:relative;animation:br 8s ease-in-out infinite}
+.pupil::after{content:"";position:absolute;width:14%;height:14%;left:30%;top:28%;border-radius:50%;background:rgba(255,255,255,.75);filter:blur(1px)}
+@keyframes br{50%{transform:scale(1.05)}}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{padding:6px 12px;border-radius:99px;background:var(--soft);font-size:14px;font-weight:500}
+.why{color:var(--mute);font-size:14px;margin:6px 0 14px}
+.pred{font-family:Fraunces,serif;font-size:20px}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row>button{flex:1 1 160px}
+.rate{display:grid;gap:8px;margin:12px 0}
+.rate button{text-align:left;display:flex;gap:12px;align-items:center;font-weight:500}
+.rate b{font-family:Fraunces,serif;font-size:22px;width:24px;text-align:center}
+textarea{width:100%;font:16px Inter,sans-serif;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);min-height:70px}
+.mute{color:var(--mute);font-size:14px}
+.status{font-size:13px;color:var(--mute);min-height:18px;margin-bottom:8px}
+.bars{display:grid;gap:7px;margin-top:8px}
+.bar{display:grid;grid-template-columns:9.5em minmax(0,1fr) 3em;gap:8px;align-items:center;font-size:14px}
+.bar i{display:block;height:12px;border-radius:6px;background:var(--acc2)}
+.bar i.best{background:var(--acc)}
+.bar span:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.fig{position:relative;height:200px}.fig>svg{position:absolute;inset:0;width:100%;height:100%}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:6px}
+.stats div{font-size:13px;color:var(--mute)}.stats b{display:block;font-family:Fraunces,serif;font-size:clamp(22px,6vw,30px);color:var(--ink)}
+details summary{cursor:pointer;font-weight:600;min-height:32px}
+details p{margin:8px 0}
+#ov{position:fixed;inset:0;background:#05070d;color:#ddd6c8;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;z-index:9;text-align:center}
+#ov.show{display:flex}
+#ov .pupil{box-shadow:0 0 60px rgba(80,120,200,.25);width:min(60vw,240px)}
+#ovt{font-family:Fraunces,serif;font-size:clamp(20px,5vw,26px);max-width:30ch;min-height:4.5em;transition:opacity .8s}
+#ov button{position:absolute;bottom:max(24px,env(safe-area-inset-bottom));background:transparent;color:#888;border-color:#333}
+#tst{display:none;text-align:center}
+#tcv{width:min(78vw,300px);aspect-ratio:1;display:block;margin:10px auto;border-radius:50%;background:#000}
+#tmsg{min-height:3em;font-weight:600;font-size:18px}
+input[type=range]{width:100%;height:44px;accent-color:var(--acc)}
+.hide{display:none!important}
+@media(prefers-reduced-motion:reduce){.pupil{animation:none}}
+@media(max-width:600px){.bar{grid-template-columns:7.5em minmax(0,1fr) 2.6em}}
+</style></head><body>
+<div class="wrap">
+<header><h1>Œil Intérieur</h1><button id="inst" class="main hide" style="margin-top:10px">Installer l'appli</button><p>Entraînement à l'imagerie mentale, guidé par un réseau de neurones qui apprend de tes retours.</p></header>
+<div class="status" id="st"></div>
+<nav>
+<button data-v="sea" class="on">Séance</button><button data-v="tes">Test lunettes</button><button data-v="pro">Progrès</button><button data-v="dat">Données</button>
+</nav>
+
+<section id="v-sea">
+<div class="card" id="pickc">
+<div class="pupil" aria-hidden="true"></div>
+<h2>Séance proposée</h2>
+<div class="chips" id="chips"></div>
+<div class="pred" id="pred"></div>
+<p class="why" id="why"></p>
+<div class="row"><button class="main" id="go">Commencer</button><button id="alt">Autre proposition</button></div>
+<p class="mute" id="novoice"></p>
+</div>
+<div class="card hide" id="ratec">
+<h2>Comment était l'image ?</h2>
+<p class="mute" id="item"></p>
+<div class="rate" id="rate"></div>
+<textarea id="note" placeholder="Note libre (facultatif) : ce que tu as perçu, sons, sensations, fatigue…"></textarea>
+<div class="row" style="margin-top:10px"><button class="main" id="save" disabled>Enregistrer</button><button id="skip">Ne pas enregistrer</button></div>
+</div>
+<div class="card hide" id="donec">
+<h2>Séance enregistrée</h2>
+<p>Le réseau a été réentraîné avec ce nouveau retour.</p>
+<div class="row"><button class="main" id="totest">Enchaîner avec le test lunettes</button><button id="again">Nouvelle proposition</button></div>
+<p class="mute">Le test fait juste après la séance est rattaché à celle-ci : le réseau tient alors compte des deux notes.</p>
+</div>
+<details class="card"><summary>Comment ça marche</summary>
+<p>Chaque séance combine quatre réglages : la scène, l'induction hypnotique, la durée et le guidage. Après la séance, tu notes la netteté de 0 à 5.</p>
+<p>Un petit ensemble de cinq réseaux de neurones (16 entrées, 10 neurones cachés), entraînés dans ton téléphone, apprend à prédire ta note selon les réglages et l'heure. Pendant les 8 premières séances, il explore. Ensuite, il choisit surtout ce qui semble marcher pour toi, avec 15 % d'essais au hasard. Le désaccord entre les cinq réseaux sert à mesurer son incertitude.</p>
+<p>Limite : il optimise ce que tu ressens. Le test lunettes est la seule mesure qui ne dépend pas de ton impression. À ce jour, aucune étude n'a montré qu'on peut guérir l'aphantasie par l'entraînement : tu fais une vraie expérience sur toi-même.</p>
+</details>
+</section>
+
+<section id="v-tes" class="hide">
+<div class="card" id="tintro">
+<h2>Test de rivalité binoculaire</h2>
+<p>Il te faut des lunettes 3D rouge/bleu (anaglyphes). À chaque essai, une couleur s'affiche : imagine le motif correspondant pendant 6 secondes. Un disque apparaît ensuite brièvement. Il montre des lignes rouges à un œil et des lignes bleues à l'autre. Indique la couleur qui a dominé.</p>
+<p class="mute">Rouge = lignes horizontales. Bleu = lignes verticales. 24 essais, environ 4 minutes. Luminosité de l'écran au maximum, téléphone à 40 cm.</p>
+<h3 style="margin-top:14px">Réglage de l'équilibre</h3>
+<p class="mute">Lunettes sur le nez, sans rien imaginer, regarde l'aperçu plusieurs fois. Règle le curseur pour que le rouge et le bleu dominent à peu près aussi souvent l'un que l'autre.</p>
+<input type="range" id="bal" min="-0.5" max="0.5" step="0.05" value="0" aria-label="Équilibre rouge/bleu">
+<div class="row"><button id="prev">Aperçu (1 s)</button><button class="main" id="tgo">Lancer le test</button></div>
+<p class="mute" id="tlink"></p>
+</div>
+<div class="card" id="tst">
+<div id="tprog" class="mute"></div>
+<canvas id="tcv"></canvas>
+<div id="tmsg"></div>
+<div class="row" id="tans"><button data-a="R" style="color:#e03a2a">Rouge</button><button data-a="M">Mélange</button><button data-a="B" style="color:#3a66e0">Bleu</button></div>
+<div class="row" style="margin-top:8px"><button id="tstop">Arrêter</button></div>
+</div>
+<div class="card hide" id="tres"></div>
+</section>
+
+<section id="v-pro" class="hide">
+<div class="card"><div class="stats" id="stats"></div></div>
+<div class="card"><h2>Netteté ressentie</h2><p class="mute">Note de chaque séance (points) et moyenne glissante sur 5 séances (ligne).</p><div class="fig"><svg id="c1"></svg></div></div>
+<div class="card"><h2>Test lunettes</h2><p class="mute">Part des essais où le motif imaginé a dominé. 50 % = hasard.</p><div class="fig"><svg id="c2"></svg></div></div>
+<div class="card"><h2>Ce que le réseau a appris</h2><div id="eff"></div></div>
+</section>
+
+<section id="v-dat" class="hide">
+<div class="card"><h2>Sauvegarde</h2>
+<p class="mute" id="dinfo"></p>
+<div class="row"><button id="dl">Télécharger une sauvegarde</button><button id="exp">Copier mes données</button></div>
+<label class="mute" style="display:block;margin-top:12px">Importer un fichier de sauvegarde : <input type="file" id="impf" accept=".json,application/json"></label>
+<textarea id="imp" placeholder="Colle ici une sauvegarde pour l'importer" style="margin-top:12px"></textarea>
+<div class="row" style="margin-top:8px"><button id="impb">Importer</button></div>
+<p class="mute" id="dmsg"></p>
+</div>
+<div class="card"><h2>Historique</h2><div id="hist" class="mute"></div></div>
+<div class="card"><h3>Tout effacer sur cet appareil</h3><p class="mute">Efface toutes les séances et tous les tests de ce navigateur. Télécharge une sauvegarde avant.</p><button id="rst">Effacer</button></div>
+</section>
+</div>
+
+<div id="ov" role="dialog" aria-label="Séance en cours"><div class="pupil" aria-hidden="true"></div><div id="ovt"></div><button id="stop">Arrêter la séance</button></div>
+
+<script>
+{
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const fmt=x=>x.toFixed(1).replace(".",",");
+const F={
+ scene:{label:"Scène",vals:["objet","couleur","lieu","visage","animal"],names:{objet:"Objet",couleur:"Forme colorée",lieu:"Lieu connu",visage:"Visage",animal:"Animal"}},
+ ind:{label:"Induction",vals:["aucune","courte","longue"],names:{aucune:"Sans hypnose",courte:"Hypnose courte",longue:"Hypnose longue"}},
+ dur:{label:"Durée",vals:[30,60,120],names:{30:"Visualisation 30 s",60:"Visualisation 1 min",120:"Visualisation 2 min"}},
+ guide:{label:"Guidage",vals:["voix","texte"],names:{voix:"Voix, yeux fermés",texte:"Texte, yeux ouverts"}}
+};
+const KEYS=["scene","ind","dur","guide"];
+const ITEMS={
+ objet:["une pomme rouge","une tasse de café fumante","une clé ancienne en laiton","un citron coupé en deux","une bougie allumée","une balle de tennis"],
+ couleur:["un carré rouge vif","un cercle bleu profond","un triangle jaune","une étoile verte","un losange orange"],
+ lieu:["la porte d'entrée de chez toi","ta cuisine","ta chambre","le jardin ou le potager","une rue que tu connais bien"],
+ visage:["le visage de quelqu'un que tu connais bien","ton propre visage dans un miroir","le visage d'un ami d'enfance"],
+ animal:["un écureuil sur une branche","un chat qui dort","un poisson rouge dans un bocal","un cheval dans un pré"]
+};
+const PROMPTS={
+ objet:["Pose ton attention sur {x}, juste devant toi.","Quelle est sa couleur exacte ? Ses nuances ?","Remarque la lumière qui s'y reflète.","Fais-le tourner lentement, découvre l'autre côté.","Approche-le. Les détails deviennent plus précis.","Imagine le toucher : sa texture, son poids, sa température.","Reste avec ce qui est là, même si ce n'est qu'un fragment."],
+ couleur:["Laisse apparaître {x} sur un fond sombre.","Remplis toute la forme de sa couleur.","Rends la couleur plus intense. Encore un peu.","Fais grandir la forme… puis rétrécir.","Suis son contour, en pensée, du bout du doigt.","Change le fond : il devient blanc.","Reste avec ce qui est là, même si ce n'est qu'un fragment."],
+ lieu:["Tu te trouves devant {x}.","Qu'y a-t-il à ta gauche ? Et à ta droite ?","D'où vient la lumière ?","Avance d'un pas. Qu'est-ce qui change ?","Remarque un petit détail que tu avais oublié.","Écoute les sons de cet endroit. Sens son odeur.","Reste avec ce qui est là, même si ce n'est qu'un fragment."],
+ visage:["Pense à {x}.","La forme générale du visage. Les cheveux.","Les yeux : leur couleur, leur regard.","Un sourire apparaît doucement.","Le visage tourne légèrement de côté.","La voix de cette personne, une expression familière.","Reste avec ce qui est là, même si ce n'est qu'un fragment."],
+ animal:["Imagine {x}.","La couleur de son pelage, de ses plumes ou de ses écailles.","Il bouge un peu. Suis le mouvement.","Regarde ses yeux.","Le décor autour de lui.","Imagine le toucher, la chaleur, le bruit qu'il fait.","Reste avec ce qui est là, même si ce n'est qu'un fragment."]
+};
+const SHORT=[["Prends une grande inspiration… et relâche lentement.",5],["Encore une fois. Inspire profondément… et laisse tout partir en expirant.",6],["Laisse ta respiration trouver son propre rythme. Tu n'as rien à faire.",6],["Sens le poids de ton corps, soutenu, posé.",5],["Tes épaules descendent un peu. Ta mâchoire se desserre.",6],["Je vais compter de dix à un. À chaque nombre, tu descends un peu plus dans un état calme et attentif.",3],["Dix… neuf… huit…",4],["Sept… six… cinq… de plus en plus calme.",5],["Quatre… trois…",4],["Deux… un.",4],["Tu es maintenant dans un espace intérieur calme, où les images peuvent venir d'elles-mêmes. Pas besoin de forcer.",6]];
+const LONG=[["Prends une grande inspiration… et relâche lentement.",5],["Laisse ta respiration ralentir, à son propre rythme.",6],["Porte ton attention sur ton front. Laisse-le se détendre.",6],["Tes paupières deviennent lourdes, agréablement lourdes.",6],["Ta mâchoire se desserre. Ta langue repose.",6],["Ta nuque et tes épaules se relâchent, comme si un poids glissait.",7],["Tes bras deviennent lourds… jusqu'au bout des doigts.",7],["Ta poitrine se soulève et redescend, toute seule.",7],["Ton ventre se détend. Ton dos s'enfonce dans le support.",7],["Tes jambes, tes pieds, lourds et chauds.",7],["Tout ton corps est maintenant au repos. Ton esprit reste éveillé, attentif.",7],["Imagine un escalier qui descend, ou simplement la sensation de descendre doucement.",5],["À chaque marche, tu vas un peu plus profond.",4],["Dix… neuf… huit…",5],["Sept… six… cinq… de plus en plus profond.",6],["Quatre… trois…",5],["Deux… un.",5],["Tu es dans ton espace intérieur, calme et ouvert. Ici, les images peuvent venir d'elles-mêmes. Accueille tout ce qui vient, sans forcer.",8]];
+const RATES=[[0,"Rien du tout, juste l'idée"],[1,"Une vague impression, sans image"],[2,"Des fragments flous, fugaces"],[3,"Une image floue mais présente"],[4,"Une image assez nette"],[5,"Aussi net que si je le voyais"]];
+
+let S={sessions:[],tests:[]},tts=null,ens=[],pick=null,run=null,cur=null,rating=null,linkId=null,lastId=null;
+const LS="oeil-interieur-v1";
+const st=t=>{$("#st").textContent=t};
+const STOP={};
+
+function clean(r){
+ if(!r||typeof r!=="object")return null;const id=String(r.id||"").slice(0,60),ts=Number(r.ts);
+ if(!id||!isFinite(ts))return null;
+ if(r.kind==="session"){
+  if(!F.scene.vals.includes(r.scene)||!F.ind.vals.includes(r.ind)||!F.dur.vals.includes(Number(r.dur))||!F.guide.vals.includes(r.guide))return null;
+  const ra=Number(r.rating);if(!(ra>=0&&ra<=5))return null;
+  const o={kind:"session",id,ts,scene:r.scene,ind:r.ind,dur:Number(r.dur),guide:r.guide,rating:ra,item:String(r.item||"").slice(0,120),note:String(r.note||"").slice(0,2000)};
+  if(isFinite(Number(r.riv))&&r.riv!==null&&r.riv!=="")o.riv=Math.max(0,Math.min(1,Number(r.riv)));return o;
+ }
+ if(r.kind==="test"){const sc=Number(r.score);if(!(sc>=0&&sc<=1))return null;
+  return{kind:"test",id,ts,score:sc,n:Number(r.n)||0,mix:Number(r.mix)||0,bias:Number(r.bias)||0,session:String(r.session||"").slice(0,60)};}
+ return null;
+}
+function merge(list){for(const x of list){const r=clean(x);if(!r)continue;const a=r.kind==="test"?S.tests:S.sessions;const i=a.findIndex(y=>y.id===r.id);if(i<0)a.push(r);else a[i]=r;}
+ S.sessions.sort((a,b)=>a.ts-b.ts);S.tests.sort((a,b)=>a.ts-b.ts);}
+function saveLocal(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
+function loadLocal(){try{const j=JSON.parse(localStorage.getItem(LS)||"null");if(j){merge(j.sessions||[]);merge(j.tests||[])}}catch(e){}}
+async function put(r){merge([r]);saveLocal();
+ st("Enregistré sur cet appareil.");}
+
+/* ---- réseau de neurones ---- */
+const NI=16,NH=10;
+function mul(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const hourOf=ts=>{const d=new Date(ts);return d.getHours()+d.getMinutes()/60};
+function feat(c,h,n){const x=[];for(const k of KEYS)for(const v of F[k].vals)x.push(c[k]==v?1:0);const a=h/24*2*Math.PI;x.push(Math.sin(a),Math.cos(a),Math.min(n/60,1));return x}
+function target(s){let y=s.rating/5;if(typeof s.riv==="number"){y=(y+Math.max(0,Math.min(1,(s.riv-.5)/.3)))/2}return y}
+function net(rng){const r=()=>(rng()*2-1)*.4;return{W:Array.from({length:NH},()=>Array.from({length:NI},r)),b:Array(NH).fill(0),w:Array.from({length:NH},r),c:0}}
+function fwd(m,x){const h=m.W.map((w,j)=>{let s=m.b[j];for(let i=0;i<NI;i++)s+=w[i]*x[i];return Math.tanh(s)});let z=m.c;for(let j=0;j<NH;j++)z+=h[j]*m.w[j];return{h,y:1/(1+Math.exp(-z))}}
+function train(m,data,rng){const ep=Math.max(60,Math.min(400,Math.round(12000/data.length))),lr=.12,l2=.002;
+ for(let e=0;e<ep;e++){for(let q=0;q<data.length;q++){const[x,t]=data[Math.floor(rng()*data.length)];const{h,y}=fwd(m,x);const g=(y-t)*y*(1-y);
+  for(let j=0;j<NH;j++){const gh=g*m.w[j]*(1-h[j]*h[j]);m.w[j]-=lr*(g*h[j]+l2*m.w[j]);m.b[j]-=lr*gh;const W=m.W[j];for(let i=0;i<NI;i++)if(x[i])W[i]-=lr*(gh*x[i]+l2*W[i])}
+  m.c-=lr*g}}}
+function retrain(){const ss=S.sessions;if(ss.length<3){ens=[];return}
+ const data=ss.map((s,i)=>[feat(s,hourOf(s.ts),i),target(s)]);ens=[];
+ for(let k=0;k<5;k++){const rng=mul(1234+k*97+ss.length);const boot=data.map(()=>data[Math.floor(rng()*data.length)]);const m=net(rng);train(m,boot,rng);ens.push(m)}}
+function predict(c){if(!ens.length)return null;const x=feat(c,hourOf(Date.now()),S.sessions.length);const ys=ens.map(m=>fwd(m,x).y*5);const mu=ys.reduce((a,b)=>a+b)/ys.length;return{mu,sd:Math.sqrt(ys.reduce((a,b)=>a+(b-mu)**2,0)/ys.length)}}
+let voiceOK=false;
+function frVoice(){try{return speechSynthesis.getVoices().find(v=>/^fr/i.test(v.lang))}catch(e){return null}}
+function checkVoice(){const v=!!tts||!!frVoice();if(v!==voiceOK){voiceOK=v;if(!run)propose()}
+ $("#novoice").textContent=voiceOK?"":"Pas de voix française disponible ici : les séances se font en texte. Ouvre la page dans Chrome pour le guidage vocal, yeux fermés."}
+function combos(){const out=[];const gv=voiceOK?F.guide.vals:["texte"];
+ for(const a of F.scene.vals)for(const b of F.ind.vals)for(const c of F.dur.vals)for(const d of gv)out.push({scene:a,ind:b,dur:c,guide:d});return out}
+function propose(){const cs=combos(),n=S.sessions.length;let c,why;
+ if(n<8||!ens.length){const cnt={};for(const s of S.sessions)for(const k of KEYS)cnt[k+s[k]]=(cnt[k+s[k]]||0)+1;
+  let best=1e9;for(const x of cs){const sc=KEYS.reduce((a,k)=>a+(cnt[k+x[k]]||0),0)+Math.random()*.9;if(sc<best){best=sc;c=x}}
+  why="Phase d'exploration ("+n+"/8 séances) : le réseau teste les réglages qu'il connaît le moins.";}
+ else if(Math.random()<.15){c=rnd(cs);why="Essai au hasard, pour vérifier que le réseau ne passe pas à côté de quelque chose."}
+ else{const m=rnd(ens),h=hourOf(Date.now());let b=-1;for(const x of cs){const y=fwd(m,feat(x,h,n)).y;if(y>b){b=y;c=x}}why="Choisi par le réseau : une des combinaisons les plus prometteuses pour toi, à cette heure-ci."}
+ pick={...c};
+ $("#chips").innerHTML=KEYS.map(k=>'<span class="chip">'+esc(F[k].names[pick[k]])+"</span>").join("");
+ const p=predict(pick);$("#pred").textContent=p?"Note attendue : "+fmt(p.mu)+" / 5 (± "+fmt(p.sd)+")":"";
+ $("#why").textContent=why;}
+
+/* ---- audio / voix ---- */
+let ac=null;
+function audio(){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();ac.resume()}catch(e){}}
+function chime(){if(!ac)return;try{const t=ac.currentTime;for(const[f,d]of[[528,0],[792,.18]]){const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.setValueAtTime(0,t+d);g.gain.linearRampToValueAtTime(.18,t+d+.05);g.gain.exponentialRampToValueAtTime(.001,t+d+2.5);o.connect(g).connect(ac.destination);o.start(t+d);o.stop(t+d+2.6)}}catch(e){}}
+const chk=()=>{if(run&&run.stop)throw STOP};
+async function wait(ms){const end=Date.now()+ms;while(Date.now()<end){chk();await new Promise(r=>setTimeout(r,Math.min(200,end-Date.now())))}chk()}
+async function say(t){const el=$("#ovt");el.style.opacity=0;await wait(300);el.textContent=t;el.style.opacity=1;
+ const words=t.split(/\s+/).length;
+ if(run.guide!=="voix"){await wait(Math.max(3500,words*450));return}
+ if(tts){try{await tts.speak(t,{language:"fr",rate:.85});chk();return}catch(e){chk()}}
+ if(window.speechSynthesis){await new Promise(res=>{let done=false;const fin=()=>{if(!done){done=true;res()}};try{const u=new SpeechSynthesisUtterance(t);u.lang="fr-FR";u.rate=.85;const v=frVoice();if(v)u.voice=v;u.onend=fin;u.onerror=fin;speechSynthesis.speak(u)}catch(e){fin()}setTimeout(fin,words*700+3000);const iv=setInterval(()=>{if(run.stop){clearInterval(iv);fin()}},200)});chk();return}
+ await wait(words*450)}
+function hush(){try{tts&&tts.stop()}catch(e){}try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}}
+let lock=null;
+async function runSession(c){
+ audio();run={stop:false,guide:c.guide};cur={...c,item:rnd(ITEMS[c.scene]),ts:Date.now()};
+ $("#ovt").textContent="";$("#ov").classList.add("show");
+ try{lock=await navigator.wakeLock.request("screen")}catch(e){}
+ try{
+  await say(c.guide==="voix"?"Installe-toi confortablement. Ferme les yeux quand tu es prêt.":"Installe-toi confortablement. Garde les yeux posés doucement sur l'écran.");
+  await wait(2500);
+  if(c.ind==="aucune"){await say("Prends une grande inspiration… et relâche.");await wait(3000)}
+  else for(const[t,p]of(c.ind==="longue"?LONG:SHORT)){await say(t);await wait(p*1000)}
+  const P=PROMPTS[c.scene],k=c.dur===30?3:c.dur===60?5:7,per=c.dur*1000/k;
+  for(let i=0;i<k;i++){const t0=Date.now();await say(P[i].replace("{x}",cur.item));const rest=per-(Date.now()-t0);if(rest>0)await wait(rest)}
+  chime();
+  if(c.ind==="aucune")await say("Laisse l'image se dissoudre. "+(c.guide==="voix"?"Tu peux ouvrir les yeux.":"C'est terminé."));
+  else{await say("Laisse l'image se dissoudre doucement.");await wait(2000);await say("Je vais compter de un à cinq. À cinq, tu "+(c.guide==="voix"?"ouvriras les yeux, ":"seras ")+"bien réveillé et reposé.");await say("Un… deux… trois… tu respires plus profondément… quatre… cinq.")}
+  await wait(1200);endRun();showRate();
+ }catch(e){endRun();if(e!==STOP)st("La séance s'est interrompue.")}
+}
+function endRun(){hush();$("#ov").classList.remove("show");run=null;try{lock&&lock.release()}catch(e){}lock=null}
+function showRate(){rating=null;$("#pickc").classList.add("hide");$("#donec").classList.add("hide");$("#ratec").classList.remove("hide");
+ $("#item").textContent="Scène : "+cur.item+" · "+KEYS.map(k=>F[k].names[cur[k]]).join(" · ");
+ $("#rate").innerHTML=RATES.map(([v,l])=>'<button data-r="'+v+'"><b>'+v+"</b>"+esc(l)+"</button>").join("");$("#note").value="";$("#save").disabled=true;$("#ratec").scrollIntoView({block:"start"})}
+$("#rate").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;rating=Number(b.dataset.r);for(const x of $("#rate").children)x.classList.toggle("on",x===b);$("#save").disabled=false});
+$("#save").onclick=async()=>{if(rating===null)return;$("#save").disabled=true;
+ const r={kind:"session",id:"s"+cur.ts+Math.floor(Math.random()*1e4),ts:cur.ts,scene:cur.scene,ind:cur.ind,dur:cur.dur,guide:cur.guide,rating,item:cur.item,note:$("#note").value.trim()};
+ lastId=r.id;await put(r);retrain();$("#ratec").classList.add("hide");$("#donec").classList.remove("hide");renderAll()};
+$("#skip").onclick=()=>{$("#ratec").classList.add("hide");$("#pickc").classList.remove("hide");propose()};
+$("#again").onclick=()=>{$("#donec").classList.add("hide");$("#pickc").classList.remove("hide");propose()};
+$("#totest").onclick=()=>{linkId=lastId;$("#donec").classList.add("hide");$("#pickc").classList.remove("hide");propose();view("tes")};
+$("#go").onclick=()=>{if(pick)runSession(pick)};
+$("#alt").onclick=propose;
+$("#stop").onclick=()=>{if(run)run.stop=true;hush()};
+
+/* ---- test de rivalité ---- */
+let bal=0,T=null;try{bal=Number(localStorage.getItem(LS+"-bal"))||0}catch(e){}
+$("#bal").value=bal;$("#bal").oninput=e=>{bal=Number(e.target.value);try{localStorage.setItem(LS+"-bal",bal)}catch(e){}};
+function draw(mode){const c=$("#tcv"),d=devicePixelRatio||1,W=c.clientWidth||280;c.width=W*d;c.height=W*d;const g=c.getContext("2d");g.setTransform(d,0,0,d,0,0);
+ g.fillStyle="#000";g.fillRect(0,0,W,W);const cx=W/2,p=Math.max(8,W/22);
+ if(mode!=="blank"){g.save();g.beginPath();g.arc(cx,cx,W*.44,0,7);g.clip();g.globalCompositeOperation="lighter";
+  if(mode==="riv"){const rv=Math.round(255*(1-Math.max(0,bal))),bv=Math.round(255*(1-Math.max(0,-bal)));
+   g.fillStyle="rgb("+rv+",0,0)";for(let y=0;y<W;y+=p)g.fillRect(0,y,W,p/2);g.fillStyle="rgb(0,0,"+bv+")";for(let x=0;x<W;x+=p)g.fillRect(x,0,p/2,W)}
+  else{g.fillStyle="rgb(140,0,160)";for(let y=0;y<W;y+=p)g.fillRect(0,y,W,p/2);for(let x=0;x<W;x+=p)g.fillRect(x,0,p/2,W)}
+  g.restore()}
+ g.fillStyle="#777";g.beginPath();g.arc(cx,cx,3,0,7);g.fill()}
+async function tw(ms){const end=Date.now()+ms;while(Date.now()<end){if(T.stop)throw STOP;await new Promise(r=>setTimeout(r,Math.min(100,end-Date.now())))}}
+let answer=null;
+function ansBtns(on){for(const b of $("#tans").children)b.disabled=!on}
+$("#tans").addEventListener("click",e=>{const b=e.target.closest("button");if(b&&answer)answer(b.dataset.a)});
+$("#prev").onclick=async()=>{$("#tintro").classList.add("hide");$("#tst").style.display="block";T={stop:false};$("#tprog").textContent="Aperçu";$("#tmsg").textContent="";ansBtns(false);draw("blank");
+ try{await tw(800);draw("riv");await tw(1000);draw("blank");$("#tmsg").textContent="Quelle couleur a dominé ?";ansBtns(true);await new Promise(r=>answer=r)}catch(e){}
+ answer=null;$("#tst").style.display="none";$("#tintro").classList.remove("hide")};
+$("#tgo").onclick=async()=>{audio();const tr=[];for(let i=0;i<10;i++)tr.push({cue:"R"},{cue:"B"});for(let i=0;i<2;i++)tr.push({cue:"R",mock:1},{cue:"B",mock:1});
+ for(let i=tr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[tr[i],tr[j]]=[tr[j],tr[i]]}
+ T={stop:false};$("#tintro").classList.add("hide");$("#tres").classList.add("hide");$("#tst").style.display="block";
+ try{lock=await navigator.wakeLock.request("screen")}catch(e){}
+ try{for(let i=0;i<tr.length;i++){const t=tr[i];$("#tprog").textContent="Essai "+(i+1)+" / "+tr.length;ansBtns(false);draw("blank");
+   const m=$("#tmsg");m.style.color=t.cue==="R"?"#e03a2a":"#3a66e0";m.textContent=t.cue==="R"?"ROUGE : lignes horizontales":"BLEU : lignes verticales";await tw(1500);
+   m.style.color="";m.textContent="Imagine…";await tw(6000);m.textContent="";draw(t.mock?"mock":"riv");await tw(750);draw("blank");
+   m.textContent="Qu'est-ce qui a dominé ?";ansBtns(true);t.ans=await new Promise(r=>answer=r);answer=null}
+  await finishTest(tr)}catch(e){}
+ answer=null;try{lock&&lock.release()}catch(e){}lock=null;$("#tst").style.display="none";$("#tintro").classList.remove("hide")};
+$("#tstop").onclick=()=>{if(T)T.stop=true;if(answer){answer("X")}};
+async function finishTest(tr){const real=tr.filter(t=>!t.mock),dec=real.filter(t=>t.ans==="R"||t.ans==="B"),mocks=tr.filter(t=>t.mock);
+ const cong=dec.filter(t=>t.ans===t.cue).length,score=dec.length?cong/dec.length:.5,mix=real.filter(t=>t.ans==="M").length/real.length,bias=mocks.filter(t=>t.ans===t.cue).length/mocks.length;
+ const ses=linkId&&S.sessions.find(s=>s.id===linkId)&&Date.now()-S.sessions.find(s=>s.id===linkId).ts<3600e3?linkId:"";
+ const r={kind:"test",id:"t"+Date.now()+Math.floor(Math.random()*1e4),ts:Date.now(),score,n:dec.length,mix,bias,session:ses};
+ await put(r);if(ses){const s={...S.sessions.find(x=>x.id===ses),riv:score};await put(s);retrain()}linkId=null;
+ const pct=Math.round(score*100);let verdict=pct<56?"Pas d'effet mesurable pour l'instant : c'est le profil habituel de l'aphantasie.":pct<66?"Léger effet de l'imagerie : à confirmer sur les prochains tests.":"Effet net : ton imagerie influence ce que tu vois.";
+ let warn="";if(mix>.6)warn+="<p>Beaucoup de « mélange » : essaie de réajuster l'équilibre ou d'éloigner un peu le téléphone.</p>";
+ if(bias>=.75)warn+="<p>Sur les essais de contrôle (motif identique pour les deux yeux), tu as souvent répondu la couleur imaginée. Le score est peut-être gonflé par l'attente : réponds « mélange » dès que tu as un doute.</p>";
+ const el=$("#tres");el.innerHTML="<h2>"+pct+" % de dominance du motif imaginé</h2><p>"+verdict+"</p><p class='mute'>Hasard = 50 %. Avec "+dec.length+" essais décidés, l'écart dû au hasard est d'environ ± "+Math.round(100/Math.sqrt(Math.max(dec.length,1))/2)+" points : regarde la tendance sur plusieurs tests."+(ses?" Ce test est rattaché à ta dernière séance.":"")+"</p>"+warn;
+ el.classList.remove("hide");renderAll()}
+
+/* ---- progrès ---- */
+function chart(svg,pts,ymin,ymax,ref,avg,lab){const draw=()=>{const W=svg.clientWidth,H=svg.clientHeight;if(!W)return;const L=34,R=10,Tp=10,B=24;
+ if(!pts.length){svg.innerHTML='<text x="'+W/2+'" y="'+H/2+'" text-anchor="middle" fill="currentColor" opacity=".6" font-size="14">Pas encore de données</text>';return}
+ const X=i=>L+(pts.length<2?(W-L-R)/2:i*(W-L-R)/(pts.length-1)),Y=v=>Tp+(1-(v-ymin)/(ymax-ymin))*(H-Tp-B);let s="";
+ for(const t of lab){s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(t[0])+'" y2="'+Y(t[0])+'" stroke="currentColor" opacity=".12"/><text x="'+(L-6)+'" y="'+(Y(t[0])+4)+'" text-anchor="end" font-size="12" fill="currentColor" opacity=".6">'+t[1]+"</text>"}
+ if(ref!=null)s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(ref)+'" y2="'+Y(ref)+'" stroke="var(--acc)" stroke-dasharray="4 4" opacity=".7"/>';
+ if(avg){const a=pts.map((_,i)=>{const w=pts.slice(Math.max(0,i-4),i+1);return w.reduce((x,y)=>x+y,0)/w.length});s+='<polyline fill="none" stroke="var(--acc)" stroke-width="2.5" points="'+a.map((v,i)=>X(i)+","+Y(v)).join(" ")+'"/>'}
+ s+=pts.map((v,i)=>'<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="4" fill="var(--acc2)"/>').join("");
+ s+='<text x="'+L+'" y="'+(H-6)+'" font-size="12" fill="currentColor" opacity=".6">1</text><text x="'+(W-R)+'" y="'+(H-6)+'" text-anchor="end" font-size="12" fill="currentColor" opacity=".6">'+pts.length+"</text>";svg.innerHTML=s};
+ draw();if(!svg._ro){svg._ro=new ResizeObserver(()=>svg._d&&svg._d());svg._ro.observe(svg)}svg._d=draw}
+function renderAll(){const ss=S.sessions,ts=S.tests,n=ss.length;
+ const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;const f5=avg(ss.slice(0,5).map(s=>s.rating)),l5=avg(ss.slice(-5).map(s=>s.rating));
+ $("#stats").innerHTML="<div><b>"+n+"</b>séances</div><div><b>"+(l5==null?"–":fmt(l5))+"</b>moyenne des 5 dernières"+(n>=10?" (début : "+fmt(f5)+")":"")+"</div><div><b>"+(ts.length?Math.round(ts[ts.length-1].score*100)+" %":"–")+"</b>dernier test lunettes</div>";
+ chart($("#c1"),ss.map(s=>s.rating),0,5,null,true,[[0,"0"],[2.5,"2,5"],[5,"5"]]);
+ chart($("#c2"),ts.map(t=>t.score*100),0,100,50,false,[[0,"0 %"],[50,"50"],[100,"100"]]);
+ const e=$("#eff");
+ if(n<8||!ens.length)e.innerHTML='<p class="mute">Encore '+Math.max(0,8-n)+" séance"+(8-n>1?"s":"")+" avant les premières tendances. Le réseau a besoin d'une trentaine de séances pour des conclusions fiables.</p>";
+ else{const cs=combos();let h="";for(const k of KEYS){const vals=(k==="guide"&&!voiceOK)?["texte"]:F[k].vals;
+   const rows=vals.map(v=>{const sub=cs.filter(c=>c[k]==v);return[v,sub.length?avg(sub.map(c=>predict(c).mu)):0]});const mx=Math.max(...rows.map(r=>r[1]));
+   h+="<h3 style='margin-top:12px'>"+esc(F[k].label)+"</h3><div class='bars'>"+rows.map(([v,m])=>"<div class='bar'><span>"+esc(F[k].names[v])+"</span><span><i class='"+(m===mx?"best":"")+"' style='width:"+Math.max(3,m/5*100)+"%'></i></span><span>"+fmt(m)+"</span></div>").join("")+"</div>"}
+  e.innerHTML="<p class='mute'>Note prédite en moyenne pour chaque réglage, à cette heure-ci. "+(n<30?"Encore peu de séances : tendances provisoires.":"")+"</p>"+h}
+ $("#dinfo").textContent=n+" séances et "+ts.length+" tests. "+"Gardés uniquement dans ce navigateur, sur cet appareil : télécharge une sauvegarde de temps en temps.";
+ $("#hist").innerHTML=ss.length?ss.slice().reverse().slice(0,40).map(s=>"<p><b>"+esc(new Date(s.ts).toLocaleDateString("fr-FR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}))+"</b> · "+esc(s.item)+" · "+esc(F.ind.names[s.ind])+" · note "+s.rating+(typeof s.riv==="number"?" · test "+Math.round(s.riv*100)+" %":"")+(s.note?"<br>"+esc(s.note):"")+"</p>").join(""):"Aucune séance pour l'instant."}
+
+/* ---- données ---- */
+$("#exp").onclick=async()=>{const t=JSON.stringify(S);try{await navigator.clipboard.writeText(t);$("#dmsg").textContent="Copié. Colle-le dans une note pour le garder."}catch(e){$("#imp").value=t;$("#dmsg").textContent="Copie automatique refusée : le texte est dans la case ci-dessus, copie-le à la main."}};
+async function importText(txt){try{const j=JSON.parse(txt);const all=[...(j.sessions||[]),...(j.tests||[])].map(clean).filter(Boolean);for(const r of all)await put(r);retrain();renderAll();propose();$("#dmsg").textContent=all.length+" éléments importés."}catch(e){$("#dmsg").textContent="Ce texte n'est pas une sauvegarde valide."}}
+$("#impb").onclick=()=>importText($("#imp").value);
+$("#impf").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>importText(String(r.result));r.readAsText(f)};
+$("#dl").onclick=()=>{try{const b=new Blob([JSON.stringify(S)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="oeil-interieur-"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);$("#dmsg").textContent="Sauvegarde téléchargée."}catch(e){$("#dmsg").textContent="Téléchargement impossible ici : utilise « Copier mes données »."}};
+let rstArm=false;$("#rst").onclick=()=>{if(!rstArm){rstArm=true;$("#rst").textContent="Confirmer l'effacement";setTimeout(()=>{rstArm=false;$("#rst").textContent="Effacer"},4000);return}
+ try{localStorage.removeItem(LS)}catch(e){}S={sessions:[],tests:[]};rstArm=false;$("#rst").textContent="Effacer";retrain();renderAll();propose();$("#dmsg").textContent="Données effacées."};
+
+function view(v){for(const b of document.querySelectorAll("nav button"))b.classList.toggle("on",b.dataset.v===v);for(const s of["sea","tes","pro","dat"])$("#v-"+s).classList.toggle("hide",s!==v);
+ $("#tlink").textContent=linkId?"Ce test sera rattaché à la séance que tu viens de faire.":"";if(v==="pro")renderAll()}
+document.querySelector("nav").addEventListener("click",e=>{const b=e.target.closest("button");if(b)view(b.dataset.v)});
+
+if("serviceWorker" in navigator&&location.protocol!=="file:")navigator.serviceWorker.register("sw.js").catch(()=>{});
+let deferred=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;$("#inst").classList.remove("hide")});
+$("#inst").onclick=async()=>{if(!deferred)return;deferred.prompt();await deferred.userChoice;deferred=null;$("#inst").classList.add("hide")};
+window.addEventListener("appinstalled",()=>$("#inst").classList.add("hide"));
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+loadLocal();retrain();checkVoice();propose();renderAll();
+try{speechSynthesis.onvoiceschanged=checkVoice}catch(e){}
+
+}
+</script>
+</body></html>
